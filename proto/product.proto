@@ -1,0 +1,23 @@
+syntax = "proto3";
+package product;
+
+service ProductService
+{
+    rpc GetProducts(GetProductsRequest) returns (GetProductsResponse);
+}
+
+message Product {
+    int32 id = 1;          
+    string name = 2;       
+    float price = 3;         // Matches Rust's f32
+    int32 category_id = 4;   // Use int32 for category_id (i16 isn't directly available)
+    string category_name = 5;       
+}
+
+message GetProductsRequest {
+    repeated int32 productIds = 1;
+}
+
+message GetProductsResponse {
+    repeated Product product = 1;
+}

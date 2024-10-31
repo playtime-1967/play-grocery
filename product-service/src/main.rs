@@ -1,6 +1,8 @@
-mod api;
 mod db;
 mod domain;
+mod grpc;
+mod http;
+use crate::grpc::product_grpc::ProductGrpcPackage;
 use anyhow::{Ok, Result};
 use axum::{
     routing::{get, post},
@@ -8,26 +10,52 @@ use axum::{
 };
 use dotenv::dotenv;
 use sqlx::PgPool;
-use std::env;
+use std::sync::Arc;
+use std::{env, str};
+use tonic::transport::server;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    println!("Product API!");
+    println!("Product Application!");
 
     dotenv().ok();
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
 
-    let pool = PgPool::connect(&database_url).await?;
+    let db_arc = Arc::new(PgPool::connect(&database_url).await?);
 
-    let app = Router::new()
+    //Axum Server Configuration
+    let http_app = Router::new()
         .route(
             "/products",
-            get(api::product_handlers::get_products).post(api::product_handlers::create_product),
+            get(http::product_handlers::get_products).post(http::product_handlers::create_product),
         )
-        .with_state(pool);
+        .with_state(db_arc.clone());
 
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
-    axum::serve(listener, app).await?;
+    //Tonic Server Configuration
+    let product_grpc = grpc::product_grpc::ProductGRPC::new(db_arc.clone());
+    let grpc_server = server::Server::builder().add_service(
+        ProductGrpcPackage::product_service_server::ProductServiceServer::new(product_grpc),
+    );
+
+    // Run both servers concurrently
+    tokio::try_join!(
+        // Run the Axum server
+        async move {
+            axum::serve(
+                tokio::net::TcpListener::bind("0.0.0.0:3000").await?,
+                http_app,
+            )
+            .await
+            .map_err(|e| e.into())
+        },
+        // Run the Tonic gRPC server
+        async move {
+            grpc_server
+                .serve("0.0.0.0:4000".parse()?)
+                .await
+                .map_err(|e| e.into())
+        }
+    )?;
 
     Ok(())
 }

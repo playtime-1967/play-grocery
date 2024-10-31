@@ -24,8 +24,14 @@ Efficiency: Sharing the target directory means that the compiled output of depen
 let env_path = std::path::Path::new("product-service/src/").join(".env");
 dotenv::from_path(env_path).ok();
 
+# Protocol Buffers 
+it uses a compact binary format to transmit data. Instead of including field names (like id, name, etc.) in the encoded data, each field is represented by its number.
+When the data is serialized, only the field number and value are included
 ------
 TODO:
+ask gpt for complex cases of ownership  
+Rust clousers
 Dereferencing, ownership, 
 write some benchmark
 unit tests
+Copy trait https://doc.rust-lang.org/book/ch10-02-traits.html  
