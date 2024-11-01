@@ -1,8 +1,8 @@
 use sqlx::PgPool;
 use tonic::{Request, Response, Status};
-use ProductGrpcPackage::product_service_server::ProductService;
-use ProductGrpcPackage::{GetProductsRequest, GetProductsResponse, Product};
-pub mod ProductGrpcPackage {
+use ProductPackage::product_service_server::ProductService;
+use ProductPackage::{GetProductsRequest, GetProductsResponse, Product};
+pub mod ProductPackage {
     tonic::include_proto!("product");
 }
 use super::error_helper;
@@ -10,18 +10,18 @@ use crate::db::product_repo;
 use std::sync::Arc;
 
 #[derive(Debug)]
-pub struct ProductGRPC {
+pub struct ProductServiceImpl {
     db: Arc<PgPool>,
 }
 
-impl ProductGRPC {
+impl ProductServiceImpl {
     pub fn new(db: Arc<PgPool>) -> Self {
-        ProductGRPC { db }
+        ProductServiceImpl { db }
     }
 }
 
 #[tonic::async_trait]
-impl ProductService for ProductGRPC {
+impl ProductService for ProductServiceImpl {
     async fn get_products(
         &self,
         request: Request<GetProductsRequest>,

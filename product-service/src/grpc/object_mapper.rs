@@ -1,9 +1,9 @@
-use super::product_grpc::{ProductGrpcPackage, ProductGrpcPackage::GetProductsResponse};
+use super::product_service::{product_service, ProductPackage::GetProductsResponse};
 use crate::domain;
 
-impl From<domain::entities::Product> for ProductGrpcPackage::Product {
+impl From<domain::entities::Product> for ProductPackage::Product {
     fn from(product: domain::entities::Product) -> Self {
-        ProductGrpcPackage::Product {
+        ProductPackage::Product {
             id: product.id,
             name: product.name,
             price: product.price,
@@ -18,7 +18,7 @@ impl From<Vec<domain::entities::Product>> for GetProductsResponse {
         GetProductsResponse {
             product: products
                 .into_iter()
-                .map(ProductGrpcPackage::Product::from)
+                .map(ProductPackage::Product::from)
                 .collect(),
         }
     }

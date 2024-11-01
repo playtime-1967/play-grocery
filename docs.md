@@ -27,8 +27,13 @@ dotenv::from_path(env_path).ok();
 # Protocol Buffers 
 it uses a compact binary format to transmit data. Instead of including field names (like id, name, etc.) in the encoded data, each field is represented by its number.
 When the data is serialized, only the field number and value are included
+
+# Arc
+A thread-safe reference-counting pointer.
+It provides shared ownership of a value of type T, allocated in the heap. Invoking clone on Arc produces a new Arc instance, which points to the same allocation on the heap as the source Arc.
 ------
 TODO:
+last commit: multiple server, grpc, error handler, object mapper,
 ask gpt for complex cases of ownership  
 Rust clousers
 Dereferencing, ownership, 

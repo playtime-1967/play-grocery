@@ -2,7 +2,7 @@ mod db;
 mod domain;
 mod grpc;
 mod http;
-use crate::grpc::product_grpc::ProductGrpcPackage;
+use crate::grpc::product_service::ProductPackage;
 use anyhow::{Ok, Result};
 use axum::{
     routing::{get, post},
@@ -32,9 +32,9 @@ async fn main() -> Result<()> {
         .with_state(db_arc.clone());
 
     //Tonic Server Configuration
-    let product_grpc = grpc::product_grpc::ProductGRPC::new(db_arc.clone());
+    let product_grpc = grpc::product_service::ProductServiceImpl::new(db_arc.clone());
     let grpc_server = server::Server::builder().add_service(
-        ProductGrpcPackage::product_service_server::ProductServiceServer::new(product_grpc),
+        ProductPackage::product_service_server::ProductServiceServer::new(product_grpc),
     );
 
     // Run both servers concurrently
