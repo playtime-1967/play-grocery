@@ -1,4 +1,4 @@
-use super::product_service::{product_service, ProductPackage::GetProductsResponse};
+use super::product_service::{ProductPackage, ProductPackage::GetProductsResponse};
 use crate::domain;
 
 impl From<domain::entities::Product> for ProductPackage::Product {
@@ -8,7 +8,7 @@ impl From<domain::entities::Product> for ProductPackage::Product {
             name: product.name,
             price: product.price,
             category_id: product.category_id.into(),
-            category_name: String::from("category_name"),
+            category_name: String::from("category_name"), //TODO:fetch from db
         }
     }
 }

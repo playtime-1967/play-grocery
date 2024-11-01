@@ -1,14 +1,14 @@
+use super::error_helper;
+use crate::db::product_repo;
 use sqlx::PgPool;
+use std::sync::Arc;
 use tonic::{Request, Response, Status};
 use ProductPackage::product_service_server::ProductService;
 use ProductPackage::{GetProductsRequest, GetProductsResponse, Product};
+
 pub mod ProductPackage {
     tonic::include_proto!("product");
 }
-use super::error_helper;
-use crate::db::product_repo;
-use std::sync::Arc;
-
 #[derive(Debug)]
 pub struct ProductServiceImpl {
     db: Arc<PgPool>,
@@ -26,7 +26,9 @@ impl ProductService for ProductServiceImpl {
         &self,
         request: Request<GetProductsRequest>,
     ) -> Result<Response<GetProductsResponse>, Status> {
-        println!("Got a request: {:?}", request);
+        println!("got a request: {:?}", request);
+        println!("got product_ids: {:?}", request.into_inner().product_ids); //TODO: filter get_products by product_ids.
+
         let result = product_repo::get_products(&self.db).await;
 
         result
