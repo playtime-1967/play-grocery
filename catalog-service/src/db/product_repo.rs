@@ -3,7 +3,7 @@ use anyhow::{Ok, Result};
 use sqlx::PgPool;
 
 pub async fn get_products(pool: &PgPool) -> Result<Vec<Product>> {
-    let customers = sqlx::query_as::<_, Product>("SELECT * FROM product.products")
+    let customers = sqlx::query_as::<_, Product>("SELECT * FROM catalog.products")
         .fetch_all(pool)
         .await?;
 
@@ -12,7 +12,7 @@ pub async fn get_products(pool: &PgPool) -> Result<Vec<Product>> {
 
 pub async fn create_product(pool: &PgPool, product: &mut Product) -> Result<()> {
     let record = sqlx::query!(
-        r#"INSERT INTO product.products ( category_id, name, price ) VALUES ( $1, $2, $3 ) RETURNING id"#,
+        r#"INSERT INTO catalog.products ( category_id, name, price ) VALUES ( $1, $2, $3 ) RETURNING id"#,
         product.category_id,
         product.name,
         product.price

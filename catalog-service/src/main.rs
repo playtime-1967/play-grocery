@@ -1,7 +1,7 @@
 mod db;
 mod domain;
 mod grpc;
-mod http;
+mod api;
 use crate::grpc::product_service::ProductPackage;
 use anyhow::{Ok, Result};
 use axum::{
@@ -16,7 +16,7 @@ use tonic::transport::server;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    println!("Product Application!");
+    println!("Catalog Application!");
 
     dotenv().ok();
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
@@ -27,7 +27,7 @@ async fn main() -> Result<()> {
     let http_app = Router::new()
         .route(
             "/products",
-            get(http::product_handlers::get_products).post(http::product_handlers::create_product),
+            get(api::product_handlers::get_products).post(api::product_handlers::create_product),
         )
         .with_state(db_arc.clone());
 

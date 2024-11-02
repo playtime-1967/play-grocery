@@ -1,2 +1,2 @@
 [workspace]
-members=['product-service','order-service']
+members=['catalog-service','sales-service']

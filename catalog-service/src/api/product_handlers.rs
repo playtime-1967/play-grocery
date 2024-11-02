@@ -1,5 +1,5 @@
 use super::models::ProductModel;
-use crate::http::error_handler::AppError;
+use crate::api::error_handler::AppError;
 use crate::db::product_repo;
 use crate::domain::entities::{Category, Product};
 use anyhow::Result;
@@ -15,10 +15,10 @@ pub async fn get_products(State(db): State<Arc<PgPool>>) -> Result<Json<Vec<Prod
 pub async fn create_product(
     State(db): State<Arc<PgPool>>,
     Json(payload): Json<ProductModel>,
-) -> Result<Json<Product>, AppError> //-> (StatusCode, Json<User>)
+) -> Result<Json<Product>, AppError> //-> (StatusCode, Json<Product>)
 {
     let mut new_product: Product = Product::new(payload.category_id, &payload.name, payload.price);
     product_repo::create_product(&db, &mut new_product).await?;
 
-    Ok(Json(new_product)) //(StatusCode::CREATED, Json(user))
+    Ok(Json(new_product)) //(StatusCode::CREATED, Json(new_product))
 }
