@@ -1,5 +1,5 @@
-use super::models::ProductModel;
 use crate::api::error_handler::AppError;
+use crate::domain::models::ProductModel;
 use crate::db::product_repo;
 use crate::domain::entities::{Category, Product};
 use crate::domain::models::{ProductCategoryModel};
