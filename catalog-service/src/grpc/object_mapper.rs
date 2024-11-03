@@ -1,20 +1,20 @@
 use super::product_service::{ProductPackage, ProductPackage::GetProductsResponse};
 use crate::domain;
 
-impl From<domain::entities::Product> for ProductPackage::Product {
-    fn from(product: domain::entities::Product) -> Self {
+impl From<domain::models::ProductCategoryModel> for ProductPackage::Product {
+    fn from(product: domain::models::ProductCategoryModel) -> Self {
         ProductPackage::Product {
             id: product.id,
             name: product.name,
             price: product.price,
             category_id: product.category_id.into(),
-            category_name: String::from("category_name"), //TODO:fetch from db
+            category_name: product.category_name
         }
     }
 }
 
-impl From<Vec<domain::entities::Product>> for GetProductsResponse {
-    fn from(products: Vec<domain::entities::Product>) -> Self {
+impl From<Vec<domain::models::ProductCategoryModel>> for GetProductsResponse {
+    fn from(products: Vec<domain::models::ProductCategoryModel>) -> Self {
         GetProductsResponse {
             product: products
                 .into_iter()

@@ -26,10 +26,11 @@ impl ProductService for ProductServiceImpl {
         &self,
         request: Request<GetProductsRequest>,
     ) -> Result<Response<GetProductsResponse>, Status> {
+        
         println!("got a request: {:?}", request);
-        println!("got product_ids: {:?}", request.into_inner().product_ids); //TODO: filter get_products by product_ids.
-
-        let result = product_repo::get_products(&self.db).await;
+        let result =
+            product_repo::get_products_with_category(&self.db, request.into_inner().product_ids)
+                .await;
 
         result
             .map(|products| {

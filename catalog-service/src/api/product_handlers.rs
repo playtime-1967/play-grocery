@@ -2,6 +2,8 @@ use super::models::ProductModel;
 use crate::api::error_handler::AppError;
 use crate::db::product_repo;
 use crate::domain::entities::{Category, Product};
+use crate::domain::models::{ProductCategoryModel};
+
 use anyhow::Result;
 use axum::{extract::State, response::Json};
 use sqlx::PgPool;
@@ -9,6 +11,11 @@ use std::sync::Arc;
 
 pub async fn get_products(State(db): State<Arc<PgPool>>) -> Result<Json<Vec<Product>>, AppError> {
     let products = product_repo::get_products(&db).await?;
+    Ok(Json(products))
+}
+
+pub async fn get_products_with_category(State(db): State<Arc<PgPool>>) -> Result<Json<Vec<ProductCategoryModel>>, AppError> {
+    let products = product_repo::get_products_with_category(&db,vec![2,3]).await?;
     Ok(Json(products))
 }
 

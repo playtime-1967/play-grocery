@@ -1,7 +1,7 @@
+mod api;
 mod db;
 mod domain;
 mod grpc;
-mod api;
 use crate::grpc::product_service::ProductPackage;
 use anyhow::{Ok, Result};
 use axum::{
@@ -28,6 +28,10 @@ async fn main() -> Result<()> {
         .route(
             "/products",
             get(api::product_handlers::get_products).post(api::product_handlers::create_product),
+        )
+        .route(
+            "/products2",
+            get(api::product_handlers::get_products_with_category),
         )
         .with_state(db_arc.clone());
 
