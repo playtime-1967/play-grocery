@@ -21,15 +21,12 @@ pub async fn get_products(
     State(app_state): State<Arc<AppState>>,
     Query(query_params): Query<ProductQueryParams>,
 ) -> Result<Json<Vec<ProductCategoryModel>>, AppError> {
-    println!("{:?}", query_params);
     let product_ids: Vec<i32> = query_params
         .product_ids
         .split(',')
         .filter_map(|id| id.parse::<i32>().ok())
         .collect();
-
-    println!("{:?}", product_ids);
-
+    
     let mut catalog_grpc_client = app_state.catalog_grpc_client.clone();
     let products = product_service::get_products(&mut catalog_grpc_client, product_ids).await?;
 
