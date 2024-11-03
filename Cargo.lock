@@ -1432,10 +1432,13 @@ dependencies = [
  "axum",
  "chrono",
  "dotenv",
+ "prost",
  "serde",
  "serde_json",
  "tokio",
  "tokio-postgres",
+ "tonic",
+ "tonic-build",
 ]
 
 [[package]]

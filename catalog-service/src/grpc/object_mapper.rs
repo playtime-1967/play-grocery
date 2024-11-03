@@ -1,4 +1,4 @@
-use super::product_service::{ProductPackage, ProductPackage::GetProductsResponse};
+use super::proto::{ProductPackage, ProductPackage::GetProductsResponse};
 use crate::domain;
 
 impl From<domain::models::ProductCategoryModel> for ProductPackage::Product {

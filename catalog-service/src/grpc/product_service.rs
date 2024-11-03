@@ -3,12 +3,9 @@ use crate::db::product_repo;
 use sqlx::PgPool;
 use std::sync::Arc;
 use tonic::{Request, Response, Status};
-use ProductPackage::product_service_server::ProductService;
-use ProductPackage::{GetProductsRequest, GetProductsResponse, Product};
+use super::proto::ProductPackage::product_service_server::ProductService;
+use super::proto::ProductPackage::{GetProductsRequest, GetProductsResponse, Product};
 
-pub mod ProductPackage {
-    tonic::include_proto!("product");
-}
 #[derive(Debug)]
 pub struct ProductServiceImpl {
     db: Arc<PgPool>,

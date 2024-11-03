@@ -13,3 +13,13 @@ pub struct OrderModel {
     pub product_id: i32,
     pub quantity: i16,
 }
+
+
+#[derive(Debug, Serialize)]
+pub struct ProductCategoryModel {
+    pub id: i32,
+    pub name: String,
+    pub price: f32,
+    pub category_id: i32,
+    pub category_name: String,
+}

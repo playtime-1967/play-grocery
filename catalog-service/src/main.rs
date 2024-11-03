@@ -2,7 +2,7 @@ mod api;
 mod db;
 mod domain;
 mod grpc;
-use crate::grpc::product_service::ProductPackage;
+use crate::grpc::proto::ProductPackage;
 use anyhow::{Ok, Result};
 use axum::{
     routing::{get, post},
@@ -29,10 +29,10 @@ async fn main() -> Result<()> {
             "/products",
             get(api::product_handlers::get_products).post(api::product_handlers::create_product),
         )
-        .route(
-            "/products2",
-            get(api::product_handlers::get_products_with_category),
-        )
+        // .route(
+        //     "/get_products_with_category",
+        //     get(api::product_handlers::get_products_with_category),
+        // )
         .with_state(db_arc.clone());
 
     //Tonic Server Configuration
