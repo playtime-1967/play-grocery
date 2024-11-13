@@ -56,3 +56,17 @@ impl<'a> FromSql<'a> for Status {
         ty.name() == "order_status" //custom type
     }
 }
+pub fn add(a: i32, b: i32) -> i32 {
+    a + b
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*; //anything we define in the outer module is available to this tests module
+    #[test]
+    //#[should_panic]
+    //#[ignore]
+    fn test_add() {
+        assert_eq!(add(2, 3), 5);
+    }
+}
