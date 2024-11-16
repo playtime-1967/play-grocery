@@ -19,6 +19,9 @@ COPY proto /usr/src/proto
 # Copy the entire package source code, including the .env file
 COPY catalog-service/ .
 
+# Run unit tests before proceeding with the build
+RUN cargo test --release
+
 # Build dependencies separately to cache them if they don’t change
 RUN cargo fetch
 
