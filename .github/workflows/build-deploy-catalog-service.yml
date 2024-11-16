@@ -24,7 +24,7 @@ jobs:
     # Build the Docker image from the Dockerfile
       - name: Build Docker image
         run: |
-         docker build -t ${{ secrets.DOCKER_USERNAME }}/catalog-service:latest .
+         docker build -t ${{ secrets.DOCKER_USERNAME }}/catalog-service:latest -f catalog-service/Dockerfile .
    
     # Push the Docker image to Docker Hub
       - name: Push Docker image
