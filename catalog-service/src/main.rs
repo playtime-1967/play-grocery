@@ -13,6 +13,7 @@ use sqlx::PgPool;
 use std::sync::Arc;
 use std::{env, str};
 use tonic::transport::server;
+use sqlx::postgres::PgPoolOptions;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -21,7 +22,8 @@ async fn main() -> Result<()> {
     dotenv().ok();
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
 
-    let db_arc = Arc::new(PgPool::connect(&database_url).await?);
+    //let db_arc = Arc::new(PgPool::connect(&database_url).await?);
+    let db_arc = Arc::new(create_db_pool(&database_url).await?);
 
     //Axum Server Configuration
     let http_app = Router::new()
@@ -62,4 +64,14 @@ async fn main() -> Result<()> {
     )?;
 
     Ok(())
+}
+
+
+async fn create_db_pool(database_url: &str) -> Result<sqlx::PgPool> {
+    let pool = PgPoolOptions::new()
+        .max_connections(5)
+        .connect(database_url)
+        .await?;
+
+    Ok(pool)
 }

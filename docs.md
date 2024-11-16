@@ -21,3 +21,8 @@ cargo test
 cargo test {test_name}
 cargo test {test_name_pattern} for example all tests's name that contain 'panic': cargo test panic
 cargo test --test {file_name} testing a specifi integration test
+
+
+# Identify the Dependency Tree
+Use the following command(powershell) to see which dependency is pulling in idna:
+cargo tree | Select-String "idna"

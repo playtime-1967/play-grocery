@@ -1,7 +1,7 @@
 use crate::domain::entities::{Category, Product};
 use crate::domain::models::ProductCategoryModel;
 use anyhow::{Ok, Result};
-use sqlx::PgPool;
+use sqlx::{PgPool, Row};
 
 pub async fn get_products(pool: &PgPool) -> Result<Vec<Product>> {
     let customers = sqlx::query_as::<_, Product>("SELECT * FROM catalog.products")
@@ -27,16 +27,14 @@ pub async fn get_products_with_category(
 }
 
 pub async fn create_product(pool: &PgPool, product: &mut Product) -> Result<()> {
-    let record = sqlx::query!(
-        "INSERT INTO catalog.products ( category_id, name, price ) VALUES ( $1, $2, $3 ) RETURNING id",
-        product.category_id,
-        product.name,
-        product.price
-    )
-    .fetch_one(pool)
+    let record = sqlx::query("INSERT INTO catalog.products ( category_id, name, price ) VALUES ( $1, $2, $3 ) RETURNING id")
+    .bind(product.category_id)
+    .bind(&product.name)
+    .bind(product.price)
+    .fetch_one(pool) 
     .await?;
 
-    product.set_id(record.id);
+    product.set_id(record.try_get("id")?);
 
     Ok(())
 }
