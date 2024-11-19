@@ -9,19 +9,16 @@ WORKDIR /usr/src/sales-service
 
 # Copy the workspace-level Cargo files
 COPY Cargo.lock /usr/src/Cargo.lock
-
-
-# Copy the workspace-level Cargo.toml
 COPY Cargo.toml /usr/src/Cargo.toml
 
 # Copy the package-specific Cargo.toml
-COPY sales-service/Cargo.toml ./
+COPY sales-service/Cargo.toml /usr/src/sales-service/Cargo.toml
 
 # Copy the proto files to the workspace
 COPY proto /usr/src/proto
 
 # Copy the entire package source code, including the .env file
-COPY sales-service/ .
+COPY sales-service/ /usr/src/sales-service
 
 # Run unit tests before proceeding with the build
 RUN cargo test --release
