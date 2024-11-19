@@ -10,6 +10,10 @@ WORKDIR /usr/src/sales-service
 # Copy the workspace-level Cargo files
 COPY Cargo.lock /usr/src/Cargo.lock
 
+
+# Copy the workspace-level Cargo.toml
+COPY Cargo.toml /usr/src/app/Cargo.toml
+
 # Copy the package-specific Cargo.toml
 COPY sales-service/Cargo.toml ./
 
