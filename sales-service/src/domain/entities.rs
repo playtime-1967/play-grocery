@@ -1,7 +1,6 @@
 use serde::{Serialize,Deserialize};
 use tokio_postgres::types;
 
-//#[derive(Debug, Serialize)]
 pub struct Order {
     pub id: i64,
     pub customer_id: i64,

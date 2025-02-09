@@ -1,5 +1,5 @@
-use axum::{response::{ IntoResponse, Response}};
 use axum::http::StatusCode;
+use axum::response::{IntoResponse, Response};
 
 pub struct AppError(anyhow::Error);
 
@@ -11,7 +11,11 @@ impl From<anyhow::Error> for AppError {
 
 impl IntoResponse for AppError {
     fn into_response(self) -> Response {
-        //TODO: Customize your response here
-        (StatusCode::INTERNAL_SERVER_ERROR, format!("Something went wrong: {}", self.0)).into_response()
+        //TODO: customize the response.
+        (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Something went wrong: {}", self.0),
+        )
+            .into_response()
     }
 }

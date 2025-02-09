@@ -5,7 +5,6 @@ use std::sync::Arc;
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    println!("Sales Application!");
     dotenv().ok();
 
     let db_client = configure_database().await;
@@ -17,13 +16,11 @@ async fn main() -> Result<()> {
         catalog_grpc_client,
     });
 
-    //Axum Server Configuration
+    //Http Server Configuration
+    let addr = "0.0.0.0:1969";
+    println!("Sales HTTP server listening on {}", addr);
     let http_app = create_router(shared_state);
-    axum::serve(
-        tokio::net::TcpListener::bind("0.0.0.0:5000").await?,
-        http_app,
-    )
-    .await?;
+    axum::serve(tokio::net::TcpListener::bind(addr).await?, http_app).await?;
 
     Ok(())
 }

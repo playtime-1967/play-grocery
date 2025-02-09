@@ -1,4 +1,4 @@
-use super::proto::{ProductPackage};
+use super::proto::ProductPackage;
 use crate::domain;
 
 impl From<ProductPackage::Product> for domain::models::ProductCategoryModel {

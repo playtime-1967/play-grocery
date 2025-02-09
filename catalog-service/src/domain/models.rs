@@ -1,7 +1,13 @@
 use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
 
-#[derive(Serialize, Deserialize)] //TODO object mapper
+#[derive(Serialize, Deserialize)]
+pub struct CategoryModel {
+    pub category_id: i16,
+    pub name: String,
+}
+
+#[derive(Serialize, Deserialize)]
 pub struct ProductModel {
     pub category_id: i16,
     pub name: String,

@@ -3,6 +3,16 @@ use crate::domain::models::ProductCategoryModel;
 use anyhow::{Ok, Result};
 use sqlx::{PgPool, Row};
 
+pub async fn create_category(pool: &PgPool, category: &Category) -> Result<()> {
+    _ = sqlx::query("INSERT INTO catalog.categories ( id, name ) VALUES ( $1, $2 ) RETURNING id")
+    .bind(category.id)
+    .bind(&category.name)
+    .fetch_one(pool) 
+    .await?;
+
+    Ok(())
+}
+
 pub async fn get_products(pool: &PgPool) -> Result<Vec<Product>> {
     let customers = sqlx::query_as::<_, Product>("SELECT * FROM catalog.products")
         .fetch_all(pool)

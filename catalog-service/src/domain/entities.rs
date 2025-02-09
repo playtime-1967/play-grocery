@@ -1,10 +1,19 @@
 use serde::Serialize;
 use sqlx::FromRow;
 
-#[derive(Debug, FromRow)]
+#[derive(Debug, FromRow, Serialize)]
 pub struct Category {
     pub id: i16,
     pub name: String,
+}
+
+impl Category {
+    pub fn new(category_id: i16, name: String) -> Self {
+        Category {
+            id: category_id,
+            name: name,
+        }
+    }
 }
 
 #[derive(Debug, FromRow, Serialize)]

@@ -33,9 +33,7 @@ COPY --from=builder /usr/src/catalog-service/target/release/catalog-service /usr
 # Copy the .env file to the runtime container
 COPY --from=builder /usr/src/catalog-service/.env /usr/local/bin/.env
 
-# Expose the necessary port
 EXPOSE 8080
 EXPOSE 443
 
-# Run the binary by default when the container starts
 ENTRYPOINT ["catalog-service"]

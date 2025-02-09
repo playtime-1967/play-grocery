@@ -1,9 +1,31 @@
-use crate::domain::entities::Status;
-use crate::domain::models::OrderModel;
-use std::error::Error;
-use tokio_postgres::types::{FromSql, Type};
+use crate::domain::models::{CreateOrderModel, OrderModel};
 use tokio_postgres::Client;
-use tokio_postgres::Row;
+
+pub async fn create_order(db: &Client, order: &CreateOrderModel) -> anyhow::Result<()> {
+    //TODO: support db transaction.
+    db.execute(
+        "INSERT INTO sales.orders (id, customer_id, status, created_date, delivery_date)
+            VALUES ($1, $2, $3, $4, $5);",
+        &[
+            &order.id,
+            &order.customer_id,
+            &order.status,
+            &order.created_date,
+            &order.delivery_date,
+        ],
+    )
+    .await?;
+
+    for detail in &order.details {
+        db.execute(
+            "INSERT INTO sales.order_details (id, order_id, product_id, quantity) VALUES ($1, $2, $3, $4);",
+            &[ &detail.id, &order.id, &detail.product_id, &detail.quantity],
+        )
+        .await?;
+    }
+
+    Ok(())
+}
 
 pub async fn get_orders(db: &Client, customer_id: i64) -> anyhow::Result<Vec<OrderModel>> {
     let result = db
@@ -17,55 +39,22 @@ pub async fn get_orders(db: &Client, customer_id: i64) -> anyhow::Result<Vec<Ord
 
     let orders: Vec<OrderModel> = result
         .into_iter()
-        .map(
-            |row| OrderModel::from(row), //Or without from func: OrderModel {...}
-        )
+        .map(|row| OrderModel::from(row))
         .collect();
 
     Ok(orders)
 }
 
-impl From<Row> for OrderModel {
-    fn from(row: Row) -> Self {
-        Self {
-            id: row.get("id"),
-            customer_id: row.get("customer_id"),
-            status: row.get("status"),
-            created_date: row.get("created_date"),
-            delivery_date: row.get("delivery_date"),
-            detail_id: row.get("detail_id"),
-            product_id: row.get("product_id"),
-            quantity: row.get("quantity"),
-        }
-    }
-}
-
-impl<'a> FromSql<'a> for Status {
-    fn from_sql(ty: &Type, raw: &[u8]) -> core::result::Result<Self, Box<dyn Error + Sync + Send>> {
-        let status_str = std::str::from_utf8(raw)?;
-        match status_str {
-            "Active" => Ok(Status::Active),
-            "Delivered" => Ok(Status::Delivered),
-            _ => Err("Unknown status".into()),
-        }
-    }
-    // fn accepts(ty: &Type) -> bool {
-    //     *ty == Type::TEXT Or Type::VARCHAR, depending on your PostgreSQL schema
-    // }
-    fn accepts(ty: &Type) -> bool {
-        ty.name() == "order_status" //custom type
-    }
-}
+//---------------------------------------------------------------------
+//TODO: write unit tests.
 pub fn add(a: i32, b: i32) -> i32 {
     a + b
 }
 
 #[cfg(test)]
 mod tests {
-    use super::*; //anything we define in the outer module is available to this tests module
+    use super::*;
     #[test]
-    //#[should_panic]
-    //#[ignore]
     fn test_add() {
         assert_eq!(add(2, 3), 5);
     }

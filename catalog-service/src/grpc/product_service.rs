@@ -24,7 +24,7 @@ impl ProductService for ProductServiceImpl {
         request: Request<GetProductsRequest>,
     ) -> Result<Response<GetProductsResponse>, Status> {
         
-        println!("got a request: {:?}", request);
+        println!("Received a request: {:?}", request);
         let result =
             product_repo::get_products_with_category(&self.db, request.into_inner().product_ids)
                 .await;
@@ -35,12 +35,5 @@ impl ProductService for ProductServiceImpl {
                 Response::new(response)
             })
             .map_err(error_helper::handle)
-
-        //Or without error helper:
-        // let products = product_repo::get_products(&self.db).await
-        //                             .unwrap_or_else(|err| panic!("blah blah:{:?}", err));
-
-        // let response: GetProductsResponse = products.into();
-        // Ok(Response::new(response))
     }
 }

@@ -1,6 +1,6 @@
 use tonic::Status;
 
 pub fn handle(error: anyhow::Error) -> Status {
-    //TODO: Customize your response here
+    //TODO: customize the response.
     Status::internal(error.to_string())
 }
