@@ -134,3 +134,7 @@ Sales Service:
 DATABASE_URL=postgres://postgres:postgres@localhost/play-grocery-db
 CATALOG_SERVICE_GRPC_URL=http://127.0.0.1:1968/
 ```
+---------------------------------------------------------------------------------------------------------------------------
+🐳 **Build Pipelines**  
+
+Each microservice has its own build pipeline. After building the Docker images, they are automatically pushed to my [Docker Hub repository](https://hub.docker.com/u/namnik).
